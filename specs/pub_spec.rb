@@ -3,7 +3,7 @@ require('minitest/rg')
 require_relative('../pub.rb')
 require_relative('../drinks.rb')
 require_relative('../customer.rb')
-
+require_relative('../food.rb')
 
 
 class TestPub < Minitest::Test
@@ -32,47 +32,88 @@ class TestPub < Minitest::Test
     @customer_age3 = 90
     @customer_alcohol_level3 = 50
     @customer3 = Customer.new(@customer_name3, @customer_wallet3, @customer_age3, @customer_alcohol_level3)
+    @food_name = "Taco"
+    @food_price = 2
+    @rejuvenation_level = 1
+    @food1 = Food.new(@food_name, @food_price, @rejuvenation_level)
+
+    @drink_stock = [
+      {
+        drink: @drink1,
+        stock: 5
+      },
+
+      {
+        drink: @drink2,
+        stock: 10
+      },
+
+      {
+        drink: @drink3,
+        stock: 15
+      },
+
+      {
+        drink: @drink4,
+        stock: 20
+      }
+    ]
   end
 
   def test_pub_name
     assert_equal("The Red Lion", @pub.name)
   end
 
+
   def test_give_drink
-      @pub.give_drink("Vodka Coke", @drinks, @customer1)
-      result1 = @customer1.customer_hand.size
-      result2 = @drinks.size
-      assert_equal(1, result1)
-      assert_equal(3, result2)
+    @pub.give_drink("Vodka Coke", @drinks, @customer1, @pub)
+    result1 = @customer1.customer_hand.size
+    assert_equal(1, result1)
   end
 
   def test_give_money
-      @pub.give_drink("Vodka Coke", @drinks, @customer1)
-      result1 = @customer1.customer_wallet
-      result2 = @pub.till
-      assert_equal(18, result1)
-      assert_equal(2, result2)
+    @pub.give_drink("Vodka Coke", @drinks, @customer1, @pub)
+    result1 = @customer1.customer_wallet
+    result2 = @pub.till
+    assert_equal(18, result1)
+    assert_equal(2, result2)
   end
 
+
   def test_customer_age
-    result = @pub.give_drink("Vodka Coke", @drinks, @customer2)
-    assert_equal("You're too young, pal", result)
+    result = @customer2.id_customer(@customer2)
+    assert_equal(false, result)
   end
 
 
   def test_alcohol_level
-    @pub.give_drink("Vodka Coke", @drinks, @customer1)
+    @pub.give_drink("Vodka Coke", @drinks, @customer1, @pub)
     result = @customer1.customer_alcohol_level
     assert_equal(4, result)
   end
+  #
+  # def test_drunkeness
+  # result = @pub.give_drink("Vodka Coke", @drinks, @customer3)
+  # phrase = "You're too drunk!"
+  # # assert_equal(phrase, result)
+  # end
 
-  def test_drunkeness
-  result = @pub.give_drink("Vodka Coke", @drinks, @customer3)
-  phrase = "You're too drunk!"
-  assert_equal(phrase, result)
+  def test_sober_up
+    @customer3.sober_up(@customer3, @food1)
+    result = @customer3.customer_alcohol_level
+    assert_equal(49, result)
   end
 
 
+   def test_stock_of_drink
+     result = @pub.stock_of_drink("Vodka Coke", @drink_stock)
+     assert_equal(5, result)
+   end
+
+   def test_total_stock
+     result = @pub.total_stock(@drink_stock)
+     assert_equal(50, result)
+   end
 
 
 end

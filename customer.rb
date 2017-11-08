@@ -11,12 +11,22 @@ class Customer
      @customer_alcohol_level = customer_alcohol_level
    end
 
-  #  def id_customer(customer)
-  #    if customer.customer_age > 18
-  #      return true
-  #    else
-  #      return "You're too young, pal"
-  #    end
-  #  end
+
+   def give_money(drink, customer, pub)
+     pub.till += drink.drink_price
+     customer.customer_wallet -= drink.drink_price
+   end
+
+   def get_drunk(drink, customer)
+     customer.customer_alcohol_level += drink.alcohol
+   end
+
+  def sober_up(customer, food)
+    customer.customer_alcohol_level -= food.rejuvenation_level
+  end
+
+   def id_customer(customer)
+     customer.customer_age > 18 ? true : false
+   end
 
 end
