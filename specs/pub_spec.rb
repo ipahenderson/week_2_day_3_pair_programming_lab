@@ -50,7 +50,7 @@ class TestPub < Minitest::Test
   end
 
   def test_customer_name
-    assert_equal("Melvin", @customer.customer_name)
+    assert_equal("Melvin", @melvin.customer_name)
   end
 
   def test_drink_name
@@ -73,9 +73,14 @@ class TestPub < Minitest::Test
   end
 
 
-  def test_customer_age
+  def test_customer_age__refuse
     result = @billy.id_customer(@billy)
     assert_equal(false, result)
+  end
+
+  def test_customer_age__allow
+    result = @melvin.id_customer(@melvin)
+    assert_equal(true, result)
   end
 
 
